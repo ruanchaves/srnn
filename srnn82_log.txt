@@ -1,0 +1,90 @@
+Using GloVe embeddings
+Found 400000 word vectors.
+Build Model
+2018-08-17 08:23:08.018959: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
+2018-08-17 08:23:08.126222: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:892] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-08-17 08:23:08.126642: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties: 
+name: GeForce GTX 1070 Ti major: 6 minor: 1 memoryClockRate(GHz): 1.683
+pciBusID: 0000:28:00.0
+totalMemory: 7.93GiB freeMemory: 7.34GiB
+2018-08-17 08:23:08.126661: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1120] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: GeForce GTX 1070 Ti, pci bus id: 0000:28:00.0, compute capability: 6.1)
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         (None, 8)                 0         
+_________________________________________________________________
+embedding_1 (Embedding)      (None, 8, 200)            6000200   
+_________________________________________________________________
+gru_1 (GRU)                  (None, 50)                37650     
+=================================================================
+Total params: 6,037,850
+Trainable params: 6,037,850
+Non-trainable params: 0
+_________________________________________________________________
+None
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_2 (InputLayer)         (None, 8, 8)              0         
+_________________________________________________________________
+time_distributed_1 (TimeDist (None, 8, 50)             6037850   
+_________________________________________________________________
+gru_2 (GRU)                  (None, 50)                15150     
+=================================================================
+Total params: 6,053,000
+Trainable params: 6,053,000
+Non-trainable params: 0
+_________________________________________________________________
+None
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_3 (InputLayer)         (None, 8, 8, 8)           0         
+_________________________________________________________________
+time_distributed_2 (TimeDist (None, 8, 50)             6053000   
+_________________________________________________________________
+gru_3 (GRU)                  (None, 50)                15150     
+_________________________________________________________________
+dense_1 (Dense)              (None, 5)                 255       
+=================================================================
+Total params: 6,068,405
+Trainable params: 6,068,405
+Non-trainable params: 0
+_________________________________________________________________
+None
+SRNN.py:166: UserWarning: The `nb_epoch` argument in `fit` has been renamed `epochs`.
+  verbose = 1)
+Train on 374887 samples, validate on 46861 samples
+Epoch 1/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.8446 - acc: 0.6281Epoch 00001: val_acc improved from -inf to 0.65769, saving model to SRNN(8,2)_yelp2013.h5
+374887/374887 [==============================] - 270s 720us/step - loss: 0.8446 - acc: 0.6281 - val_loss: 0.7763 - val_acc: 0.6577
+Epoch 2/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.7265 - acc: 0.6825Epoch 00002: val_acc improved from 0.65769 to 0.67113, saving model to SRNN(8,2)_yelp2013.h5
+374887/374887 [==============================] - 268s 714us/step - loss: 0.7265 - acc: 0.6825 - val_loss: 0.7486 - val_acc: 0.6711
+Epoch 3/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.6639 - acc: 0.7116Epoch 00003: val_acc did not improve
+374887/374887 [==============================] - 264s 705us/step - loss: 0.6638 - acc: 0.7116 - val_loss: 0.7608 - val_acc: 0.6697
+Epoch 4/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.5991 - acc: 0.7428Epoch 00004: val_acc did not improve
+374887/374887 [==============================] - 265s 708us/step - loss: 0.5992 - acc: 0.7428 - val_loss: 0.8132 - val_acc: 0.6614
+Epoch 5/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.5254 - acc: 0.7781Epoch 00005: val_acc did not improve
+374887/374887 [==============================] - 265s 707us/step - loss: 0.5254 - acc: 0.7781 - val_loss: 0.8898 - val_acc: 0.6538
+Epoch 6/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.4469 - acc: 0.8146Epoch 00006: val_acc did not improve
+374887/374887 [==============================] - 267s 711us/step - loss: 0.4469 - acc: 0.8146 - val_loss: 1.0457 - val_acc: 0.6357
+Epoch 7/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.3748 - acc: 0.8478Epoch 00007: val_acc did not improve
+374887/374887 [==============================] - 264s 705us/step - loss: 0.3748 - acc: 0.8478 - val_loss: 1.1992 - val_acc: 0.6276
+Epoch 8/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.3149 - acc: 0.8739Epoch 00008: val_acc did not improve
+374887/374887 [==============================] - 264s 705us/step - loss: 0.3149 - acc: 0.8738 - val_loss: 1.3970 - val_acc: 0.6281
+Epoch 9/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.2707 - acc: 0.8930Epoch 00009: val_acc did not improve
+374887/374887 [==============================] - 265s 706us/step - loss: 0.2707 - acc: 0.8930 - val_loss: 1.5876 - val_acc: 0.6203
+Epoch 10/10
+374800/374887 [============================>.] - ETA: 0s - loss: 0.2349 - acc: 0.9077Epoch 00010: val_acc did not improve
+374887/374887 [==============================] - 266s 709us/step - loss: 0.2349 - acc: 0.9077 - val_loss: 1.7433 - val_acc: 0.6169
+46860/46860 [==============================] - 5s 107us/step
+[0.7554653806916374, 0.6680324381862092]
+

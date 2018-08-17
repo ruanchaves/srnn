@@ -14,10 +14,10 @@ from keras.utils.np_utils import to_categorical
 from keras.preprocessing.text import Tokenizer, text_to_word_sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Model
-from keras.layers import Input, Embedding, GRU, TimeDistributed, Dense
+from keras.layers import Input, Embedding, GRU, TimeDistributed, Dense, Bidirectional, merge
 
 #load data
-df = pd.read_csv("yelp_2013.csv")
+df = pd.read_csv("/home/ruan/Envs/data/yelp_2013.csv")
 #df = df.sample(5000)
 
 Y = df.stars.values-1
@@ -32,7 +32,7 @@ TEST_SPLIT=0.1
 NUM_FILTERS = 50
 MAX_LEN = 512
 Batch_size = 100
-EPOCHS = 10
+EPOCHS = 200
 
 #shuffle the data
 indices = np.arange(X.shape[0])
@@ -96,7 +96,7 @@ for i in range(x_train_padded_seqs.shape[0]):
 
 #load pre-trained GloVe word embeddings
 print "Using GloVe embeddings"
-glove_path = 'glove.6B.200d.txt'
+glove_path = '/home/ruan/Envs/data/glove.6B.200d.txt'
 embeddings_index = {}
 f = open(glove_path)
 for line in f:
@@ -126,17 +126,17 @@ embedding_layer = Embedding(MAX_NUM_WORDS + 1,
 print "Build Model"
 input1 = Input(shape=(MAX_LEN/64,), dtype='int32')
 embed = embedding_layer(input1)
-gru1 = GRU(NUM_FILTERS,recurrent_activation='sigmoid',activation=None,return_sequences=False)(embed)
+gru1 = Bidirectional(GRU(NUM_FILTERS,recurrent_activation='sigmoid',activation=None,return_sequences=False,dropout=0.3, recurrent_dropout=0.3))(embed)
 Encoder1 = Model(input1, gru1)
 
 input2 = Input(shape=(8,MAX_LEN/64,), dtype='int32')
 embed2 = TimeDistributed(Encoder1)(input2)
-gru2 = GRU(NUM_FILTERS,recurrent_activation='sigmoid',activation=None,return_sequences=False)(embed2)
+gru2 = Bidirectional(GRU(NUM_FILTERS,recurrent_activation='sigmoid',activation=None,return_sequences=False,dropout=0.3,recurrent_dropout=0.3))(embed2)
 Encoder2 = Model(input2,gru2)
 
 input3 = Input(shape=(8,8,MAX_LEN/64), dtype='int32')
 embed3 = TimeDistributed(Encoder2)(input3)
-gru3 = GRU(NUM_FILTERS,recurrent_activation='sigmoid',activation=None,return_sequences=False)(embed3)
+gru3 = Bidirectional(GRU(NUM_FILTERS,recurrent_activation='sigmoid',activation=None,return_sequences=False,dropout=0.3, recurrent_dropout=0.3))(embed3)
 preds = Dense(5, activation='softmax')(gru3)
 model = Model(input3, preds)
 
@@ -154,7 +154,7 @@ model.compile(loss='categorical_crossentropy',
 
 #save the best model on validation set
 from keras.callbacks import ModelCheckpoint             
-savebestmodel = 'save_model/SRNN(8,2)_yelp2013.h5'
+savebestmodel = 'biSRNN(8,2)_yelp2013.h5'
 checkpoint = ModelCheckpoint(savebestmodel, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 callbacks=[checkpoint] 
              
