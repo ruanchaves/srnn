@@ -137,7 +137,8 @@ embedding_layer = Embedding(MAX_NUM_WORDS + 1,
 print("Build Model")
 input1 = Input(shape=(MAX_LEN//64,), dtype='int32')
 embed = embedding_layer(input1)
-gru1 = Bidirectional(CuDNNGRU(NUM_FILTERS))(embed)
+gru1 = CuDNNGRU(NUM_FILTERS)(embed)
+#gru1 = Bidirectional(CuDNNGRU(NUM_FILTERS))(embed)
 Encoder1 = Model(input1, gru1)
 
 print('Done 2')
@@ -145,13 +146,15 @@ print('Done 2')
 
 input2 = Input(shape=(8,MAX_LEN//64,), dtype='int32')
 embed2 = TimeDistributed(Encoder1)(input2)
-gru2 = Bidirectional(CuDNNGRU(NUM_FILTERS))(embed2)
+gru2 = CuDNNGRU(NUM_FILTERS)(embed2)
+#gru2 = Bidirectional(CuDNNGRU(NUM_FILTERS))(embed2)
 Encoder2 = Model(input2,gru2)
 
 
 input3 = Input(shape=(8,8,MAX_LEN//64), dtype='int32')
 embed3 = TimeDistributed(Encoder2)(input3)
-gru3 = Bidirectional(CuDNNGRU(NUM_FILTERS))(embed3)
+gru3 = CuDNNGRU(NUM_FILTERS)(embed3)
+#gru3 = Bidirectional(CuDNNGRU(NUM_FILTERS))(embed3)
 preds = Dense(5, activation='softmax')(gru3)
 model = Model(input3, preds)
 
